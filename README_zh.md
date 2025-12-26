@@ -4,6 +4,8 @@
 
 **Mail MCP Bridge** 是一个连接 macOS Mail 和 AI 助手（如 Claude、ChatGPT）的桥梁。只需在 Mail 中复制 Message-ID 并粘贴给 AI，无需手动导出邮件，AI 就能直接读取和分析邮件内容。
 
+[English](README.md)
+
 ## 🎯 主要用途
 
 **核心价值：让 AI 帮你分析纯文本邮件，跟踪项目进展**
@@ -119,6 +121,12 @@ cd mail-mcp-bridge
 3. 按 `⌘ + ⇧ + C`
 4. 会听到提示音并看到带有 Message-ID 的通知
 5. Message-ID 已复制到剪贴板，可以粘贴给 AI 了
+
+**演示视频：**
+
+https://github.com/user-attachments/assets/7ede277f-41ef-4898-ad8b-3014d5854b19
+
+> **注意：** 视频中为了演示清楚，通过右键菜单运行 Quick Action。日常使用时，键盘快捷键 `⌘ + ⇧ + C` 会更快更方便。
 
 ## 📖 使用方法
 

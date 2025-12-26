@@ -4,6 +4,8 @@
 
 **Mail MCP Bridge** enables AI assistants (like Claude, ChatGPT) to directly access and analyze your macOS Mail emails. Simply copy a Message-ID from Mail and paste it to AI — no manual email exporting needed.
 
+[🇨🇳 中文版](README_zh.md)
+
 ## 🎯 Primary Use Case
 
 **Core Value: Let AI analyze email text content and track project progress**
