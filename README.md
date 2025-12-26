@@ -40,12 +40,56 @@ The setup script will:
 
 ### Setup Mail Quick Action
 
-1. Open **Automator** on your Mac
-2. Create a new **Quick Action** (or Service)
-3. Add **Run Shell Script** action
-4. Copy the content from `automator_script.sh`
-5. Save as "Copy Message-ID"
-6. Assign keyboard shortcut (recommended: ⌘⇧C)
+Follow these steps to add a "Copy Message-ID" action to Mail:
+
+1. **Open Automator**
+   - Press `⌘ + Space` and type "Automator"
+   - Or find it in `/Applications/Automator.app`
+
+2. **Create New Quick Action**
+   - File → New (or `⌘ + N`)
+   - Select "Quick Action" (or "Service" on older macOS)
+   - Click "Choose"
+
+3. **Configure Quick Action**
+   - Workflow receives current: **email messages**
+   - in: **Mail.app**
+   - Check: "Output replaces selected text"
+
+4. **Add Shell Script Action**
+   - Search for "Run Shell Script" in the left panel
+   - Drag it to the workflow area
+   - Shell: `/bin/bash`
+   - Pass input: **as arguments**
+
+5. **Copy Script Content**
+   ```bash
+   cat automator_script.sh
+   ```
+   - Copy the entire output
+   - Paste into the script area in Automator
+
+6. **Save the Quick Action**
+   - File → Save (or `⌘ + S`)
+   - Name: **Copy Message-ID**
+   - It will be saved to `~/Library/Services/`
+
+7. **Assign Keyboard Shortcut** (Optional but Recommended)
+   - System Settings → Keyboard → Keyboard Shortcuts
+   - Select: Services → Mail
+   - Find: "Copy Message-ID"
+   - Click and add shortcut: `⌘ + ⇧ + C`
+
+**Setup Preview:**
+
+![Automator Setup](images/automatic-setup.webp)
+
+**Test It:**
+1. Open Mail app
+2. Select any email
+3. Press `⌘ + ⇧ + C`
+4. You should hear a sound and see notification with Message-ID
+5. The Message-ID is now in your clipboard, ready to paste to AI
 
 ## 📖 Usage
 
