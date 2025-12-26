@@ -93,7 +93,7 @@ Follow these steps to add a "Copy Message-ID" action to Mail:
 
 **Demo Video:**
 
-https://github.com/fatbobman/mail-mcp-bridge/blob/master/images/mail-mcp-bridge-demo.mp4
+https://github.com/user-attachments/assets/7ede277f-41ef-4898-ad8b-3014d5854b19
 
 > **Note:** In the video above, the Quick Action is triggered via right-click menu for demonstration purposes. In daily use, the keyboard shortcut `⌘ + ⇧ + C` is much faster and recommended.
 
