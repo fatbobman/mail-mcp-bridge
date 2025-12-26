@@ -353,7 +353,6 @@ chmod +x *.py *.sh
 - ✅ **No External Servers**: No data sent to external servers
 - ✅ **No Telemetry**: No analytics or tracking
 - ✅ **Read-Only**: Only reads email data, never modifies
-- ✅ **Apple Silicon Native**: Optimized for Apple Silicon Macs
 
 ## 📝 License
 
