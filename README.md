@@ -91,6 +91,12 @@ Follow these steps to add a "Copy Message-ID" action to Mail:
 4. You should hear a sound and see notification with Message-ID
 5. The Message-ID is now in your clipboard, ready to paste to AI
 
+**Demo Video:**
+
+<video src="images/mail-mcp-bridge-demo.mp4" width="600" controls></video>
+
+> **Note:** In the video above, the Quick Action is triggered via right-click menu for demonstration purposes. In daily use, the keyboard shortcut `⌘ + ⇧ + C` is much faster and recommended.
+
 ## 📖 Usage
 
 ### Basic Workflow
