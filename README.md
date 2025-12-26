@@ -37,7 +37,7 @@ In short, this project bridges the gap between macOS Mail and AI assistants, mak
 - **🧵 Thread Support** - Retrieve entire email conversations with one Message-ID
 - **🔍 Fast & Efficient** - Query emails by Message-ID in milliseconds
 - **🎯 Pure Text Output** - Clean text extraction, perfect for AI analysis
-- **⚡ Easy to Use** - Quick Action in Mail app (⌘⇧C to copy Message-ID)
+- **⚡ Easy to Use** - Quick Action in Mail app to copy Message-ID
 - **🔒 Privacy First** - Runs locally, emails never leave your Mac
 
 ## 🚀 Quick Start
