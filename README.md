@@ -4,6 +4,33 @@
 
 **Mail MCP Bridge** enables AI assistants (like Claude, ChatGPT) to directly access and analyze your macOS Mail emails. Simply copy a Message-ID from Mail and paste it to AI — no manual email exporting needed.
 
+## 🎯 Primary Use Case
+
+**Core Value: Let AI analyze email text content and track project progress**
+
+This project focuses on extracting and analyzing **plain text email content**, making it ideal for:
+
+- **📋 Project Progress Tracking** - Analyze email threads with sponsors, clients, and partners
+- **💼 Business Communication Analysis** - Extract key information, action items, and timelines
+- **🔍 Email Summarization** - Quickly understand the core content of long emails or threads
+- **📊 Data Extraction** - Extract structured information from emails (requirements, feedback, commitments)
+- **🤝 Conversation History Review** - View complete email threads to understand communication context
+
+**Note:** This project focuses on text content extraction and does not process attachments, images, or formatted HTML. For AI analysis, plain text is the most effective input format.
+
+## 💡 Why I Built This
+
+I've been exploring ways to deeply integrate AI into various aspects of my work and life. In practice, I've found that AI-assisted project management and communication summarization is particularly valuable.
+
+However, much of real-world communication happens through email—especially ongoing conversations with sponsors, clients, and partners. On macOS, email files (particularly email threads) are scattered across different directories. The traditional approach of exporting individual emails for AI analysis is inefficient and unfriendly to active projects.
+
+To solve this problem, I created **Mail MCP Bridge**:
+- One-click Message-ID retrieval (via Mail Quick Action)
+- MCP tools based on Message-ID to quickly extract structured plain text email content
+- Enable AI to seamlessly track project progress, analyze communication history, and extract key information
+
+In short, this project bridges the gap between macOS Mail and AI assistants, making email a first-class citizen in the AI workflow.
+
 ## ✨ Features
 
 - **📧 Direct Email Access** - AI can read your emails through MCP protocol
@@ -123,6 +150,15 @@ You: What's the full conversation for <message-id@example.com>?
 
 AI: I'll retrieve the entire thread...
 [AI shows all emails in the conversation]
+```
+
+**Real-World Use Case:**
+```
+You: Please summarize all communication with our sponsor Proxyman,
+including their requirements, promised timelines, and action items.
+
+AI: I'll read the relevant email threads and extract key information...
+[AI analyzes email content, organizes project progress, commitments, and action items]
 ```
 
 ## 🛠️ MCP Tools
