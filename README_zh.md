@@ -4,6 +4,13 @@
 
 **Mail MCP Bridge** 让 AI 助手（如 Claude、ChatGPT）能够直接访问和分析你的 macOS Mail 邮件。只需在 Mail 中复制 Message-ID 并粘贴给 AI——无需手动导出邮件。
 
+
+**演示: 实际使用效果** (点击观看)
+
+[![演示视频](https://github.com/user-attachments/assets/bd06230b-16ad-476d-8b73-4495071b2b6c)]
+
+*内容: 从 Mail 复制 Message-ID → AI 分析邮件内容*
+
 [English](README.md)
 
 ## 🎯 项目简介
@@ -84,10 +91,6 @@ pip3 install mcp
 
 在 Mail 应用中添加"复制 Message-ID"按钮:
 
-**视频演示** (30秒设置):
-
-[![观看演示视频](https://github.com/user-attachments/assets/7ede277f-41ef-4898-ad8b-3014d5854b19)](https://github.com/user-attachments/assets/7ede277f-41ef-4898-ad8b-3014d5854b19)
-
 **详细步骤**:
 
 1. 打开 **Automator** (`⌘ + 空格`，输入 "Automator")
@@ -117,6 +120,10 @@ pip3 install mcp
    - 系统设置 → 键盘 → 键盘快捷键
    - 服务 → Mail → "Copy Message-ID"
    - 添加快捷键 (如 `⌘ + ⇧ + C`)
+
+**Automator 设置示例**:
+
+![Automator 设置示例](images/automatic-setup.webp)
 
 **测试**:
 
