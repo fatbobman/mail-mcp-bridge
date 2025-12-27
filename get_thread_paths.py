@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 """
-获取邮件线索中所有邮件的文件路径
+Get file paths of all emails in a thread
 
-用法：
+Usage:
     python3 get_thread_paths.py "<message-id@domain.com>"
 
-或作为模块导入：
+Or import as module:
     from get_thread_paths import get_thread_paths
     paths = get_thread_paths("<message-id@domain.com>")
 """
@@ -15,25 +15,25 @@ import sys
 from pathlib import Path
 from get_email_path import get_email_path
 
-# Mail 数据库路径
+# Mail database path
 MAIL_DB_PATH = Path.home() / "Library/Mail/V10/MailData/Envelope Index"
 
 
 def get_conversation_id(message_id):
     """
-    通过 Message-ID 获取 conversation_id
+    Get conversation_id by Message-ID
 
     Args:
         message_id: RFC Message-ID
 
     Returns:
-        int: conversation_id，如果找不到返回 None
+        int: conversation_id, or None if not found
     """
     if not message_id.startswith('<'):
         message_id = f'<{message_id}>'
 
     if not MAIL_DB_PATH.exists():
-        raise FileNotFoundError(f"Mail 数据库不存在: {MAIL_DB_PATH}")
+        raise FileNotFoundError(f"Mail database not found: {MAIL_DB_PATH}")
 
     conn = sqlite3.connect(str(MAIL_DB_PATH))
     cursor = conn.cursor()
@@ -54,16 +54,16 @@ def get_conversation_id(message_id):
 
 def get_thread_message_ids(conversation_id):
     """
-    获取指定 conversation_id 的所有邮件的 Message-ID
+    Get all Message-IDs for a given conversation_id
 
     Args:
-        conversation_id: 对话 ID
+        conversation_id: Conversation ID
 
     Returns:
-        list: Message-ID 列表，按时间排序
+        list: Message-ID list, sorted by time
     """
     if not MAIL_DB_PATH.exists():
-        raise FileNotFoundError(f"Mail 数据库不存在: {MAIL_DB_PATH}")
+        raise FileNotFoundError(f"Mail database not found: {MAIL_DB_PATH}")
 
     conn = sqlite3.connect(str(MAIL_DB_PATH))
     cursor = conn.cursor()
@@ -88,28 +88,28 @@ def get_thread_message_ids(conversation_id):
 
 def get_thread_paths(message_id, include_not_found=False):
     """
-    获取邮件线索中所有邮件的文件路径
+    Get file paths of all emails in a thread
 
     Args:
-        message_id: 线索中任意一封邮件的 Message-ID
-        include_not_found: 是否包含未找到文件的邮件（返回 None）
+        message_id: Message-ID of any email in the thread
+        include_not_found: Whether to include emails without files (returns None)
 
     Returns:
-        list: 文件路径列表，按邮件发送时间排序
+        list: File path list, sorted by email sent time
     """
-    # 1. 获取 conversation_id
+    # 1. Get conversation_id
     conversation_id = get_conversation_id(message_id)
 
     if not conversation_id:
         return []
 
-    # 2. 获取线索中所有邮件的 Message-ID
+    # 2. Get all Message-IDs in the thread
     message_ids = get_thread_message_ids(conversation_id)
 
     if not message_ids:
         return []
 
-    # 3. 获取每个邮件的文件路径
+    # 3. Get file path for each email
     paths = []
     for msg_id in message_ids:
         file_path = get_email_path(msg_id)
@@ -124,56 +124,56 @@ def get_thread_paths(message_id, include_not_found=False):
 
 def main():
     if len(sys.argv) < 2:
-        print("用法: python3 get_thread_paths.py \"<message-id@domain.com>\"")
-        print("\n示例:")
+        print("Usage: python3 get_thread_paths.py \"<message-id@domain.com>\"")
+        print("\nExample:")
         print("  python3 get_thread_paths.py \"<abc123@example.com>\"")
         sys.exit(1)
 
     message_id = sys.argv[1]
 
-    # 确保包含尖括号
+    # Ensure includes angle brackets
     if not message_id.startswith('<'):
         message_id = f'<{message_id}>'
 
-    print(f"查找邮件线索: {message_id}\n")
+    print(f"Looking up email thread: {message_id}\n")
 
     try:
-        # 先获取 conversation_id
+        # First get conversation_id
         conversation_id = get_conversation_id(message_id)
 
         if not conversation_id:
-            print(f"❌ 未找到 Message-ID: {message_id}")
+            print(f"❌ Message-ID not found: {message_id}")
             return 1
 
-        print(f"找到 Conversation ID: {conversation_id}")
+        print(f"Found Conversation ID: {conversation_id}")
 
-        # 获取所有邮件的 Message-ID
+        # Get all Message-IDs
         message_ids = get_thread_message_ids(conversation_id)
-        print(f"线索包含 {len(message_ids)} 封邮件\n")
+        print(f"Thread contains {len(message_ids)} emails\n")
 
-        # 获取所有文件路径
+        # Get all file paths
         paths = get_thread_paths(message_id, include_not_found=True)
 
         print("=" * 80)
-        print(f"📧 邮件线索文件路径 (Conversation ID: {conversation_id})")
+        print(f"📧 Email Thread File Paths (Conversation ID: {conversation_id})")
         print("=" * 80)
 
         found_count = 0
         for i, (msg_id, path) in enumerate(zip(message_ids, paths), 1):
             print(f"\n[{i}] Message-ID: {msg_id}")
             if path:
-                print(f"    路径: {path}")
+                print(f"    Path: {path}")
                 found_count += 1
             else:
-                print(f"    路径: ❌ 未找到文件")
+                print(f"    Path: ❌ File not found")
 
         print("\n" + "=" * 80)
-        print(f"✅ 找到 {found_count}/{len(message_ids)} 个邮件文件")
+        print(f"✅ Found {found_count}/{len(message_ids)} email files")
         print("=" * 80)
 
-        # 输出纯路径列表（便于脚本处理）
+        # Output plain path list (for script processing)
         if found_count > 0:
-            print(f"\n📝 文件路径列表（可用于脚本）：")
+            print(f"\n📝 File path list (for scripts):")
             for path in paths:
                 if path:
                     print(path)
@@ -181,10 +181,10 @@ def main():
         return 0
 
     except FileNotFoundError as e:
-        print(f"❌ 错误: {e}")
+        print(f"❌ Error: {e}")
         return 1
     except Exception as e:
-        print(f"❌ 发生错误: {e}")
+        print(f"❌ Error occurred: {e}")
         import traceback
         traceback.print_exc()
         return 1

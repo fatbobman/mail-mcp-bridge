@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 """
-Mail MCP Server - 让 AI 直接访问 macOS Mail 邮件
+Mail MCP Server - Enable AI to access macOS Mail emails
 
-提供四个工具：
-1. get_email_path - 获取单个邮件的文件路径
-2. get_thread_paths - 获取邮件线索的所有文件路径
-3. read_email - 解析并读取单个邮件的纯文本内容
-4. read_thread - 解析并读取整个邮件线索的所有邮件内容
+Provides four tools:
+1. get_email_path - Get file path of a single email
+2. get_thread_paths - Get all file paths in an email thread
+3. read_email - Parse and read plain text content of a single email
+4. read_thread - Parse and read all emails in an entire thread
 
-运行方式：
+Run with:
     python3 mail_mcp_server.py
 """
 
@@ -16,7 +16,7 @@ import sys
 import json
 from pathlib import Path
 
-# 添加当前目录到 Python 路径
+# Add current directory to Python path
 sys.path.insert(0, str(Path(__file__).parent))
 
 from get_email_path import get_email_path as get_single_email_path
@@ -28,30 +28,30 @@ try:
     from mcp.server.stdio import stdio_server
     from mcp.types import Tool, TextContent
 except ImportError:
-    print("错误: 未安装 mcp 库", file=sys.stderr)
-    print("请运行: pip install mcp", file=sys.stderr)
+    print("Error: mcp library not installed", file=sys.stderr)
+    print("Please run: pip install mcp", file=sys.stderr)
     sys.exit(1)
 
 
-# 创建 MCP 服务器
+# Create MCP server
 app = Server("mail-server")
 
 
 @app.list_tools()
 async def list_tools() -> list[Tool]:
-    """列出所有可用工具"""
+    """List all available tools"""
     return [
         Tool(
             name="get_email_path",
-            description="通过 RFC Message-ID 获取邮件文件的绝对路径。"
-                       "Message-ID 是邮件的唯一标识符，格式如 <abc123@example.com>。"
-                       "返回邮件文件在文件系统中的完整路径，可用于读取邮件内容。",
+            description="Get the absolute path to an email file by RFC Message-ID. "
+                       "Message-ID is the unique identifier for an email, formatted like <abc123@example.com>. "
+                       "Returns the full path to the email file in the filesystem, which can be used to read email content.",
             inputSchema={
                 "type": "object",
                 "properties": {
                     "message_id": {
                         "type": "string",
-                        "description": "RFC Message-ID，如 <abc123@example.com>。可以包含或不包含尖括号。"
+                        "description": "RFC Message-ID, e.g. <abc123@example.com>. Can include or exclude angle brackets."
                     }
                 },
                 "required": ["message_id"]
@@ -59,15 +59,16 @@ async def list_tools() -> list[Tool]:
         ),
         Tool(
             name="get_thread_paths",
-            description="通过邮件线索中任意一封邮件的 Message-ID，获取整个线索中所有邮件的文件路径。"
-                       "邮件线索是一组相关的邮件（如原始邮件和所有回复）。"
-                       "返回线索中所有邮件文件的路径列表，按时间顺序排列，可用于分析完整的邮件对话。",
+            description="Get file paths of all emails in a thread by Message-ID of any email in the thread. "
+                       "An email thread is a group of related emails (such as the original email and all replies). "
+                       "Returns a list of paths to all email files in the thread, sorted chronologically, "
+                       "useful for analyzing complete email conversations.",
             inputSchema={
                 "type": "object",
                 "properties": {
                     "message_id": {
                         "type": "string",
-                        "description": "线索中任意一封邮件的 RFC Message-ID。"
+                        "description": "RFC Message-ID of any email in the thread."
                     }
                 },
                 "required": ["message_id"]
@@ -75,15 +76,15 @@ async def list_tools() -> list[Tool]:
         ),
         Tool(
             name="read_email",
-            description="通过 RFC Message-ID 解析并读取邮件的纯文本内容。"
-                       "返回邮件的主题、发件人、收件人、日期、正文文本等结构化信息，"
-                       "便于 AI 直接分析邮件内容而无需处理原始 .emlx 文件。",
+            description="Parse and read plain text content of an email by RFC Message-ID. "
+                       "Returns structured information including subject, sender, recipient, date, body text, etc., "
+                       "enabling AI to analyze email content directly without handling raw .emlx files.",
             inputSchema={
                 "type": "object",
                 "properties": {
                     "message_id": {
                         "type": "string",
-                        "description": "RFC Message-ID，如 <abc123@example.com>。可以包含或不包含尖括号。"
+                        "description": "RFC Message-ID, e.g. <abc123@example.com>. Can include or exclude angle brackets."
                     }
                 },
                 "required": ["message_id"]
@@ -91,15 +92,16 @@ async def list_tools() -> list[Tool]:
         ),
         Tool(
             name="read_thread",
-            description="通过邮件线索中任意一封邮件的 Message-ID，解析并读取整个线索的所有邮件内容。"
-                       "邮件线索是一组相关的邮件（如原始邮件和所有回复）。"
-                       "返回线索中所有邮件的结构化内容，按时间顺序排列，便于 AI 分析完整的邮件对话。",
+            description="Parse and read all emails in a thread by Message-ID of any email in the thread. "
+                       "An email thread is a group of related emails (such as the original email and all replies). "
+                       "Returns structured content of all emails in the thread, sorted chronologically, "
+                       "enabling AI to analyze complete email conversations.",
             inputSchema={
                 "type": "object",
                 "properties": {
                     "message_id": {
                         "type": "string",
-                        "description": "线索中任意一封邮件的 RFC Message-ID。"
+                        "description": "RFC Message-ID of any email in the thread."
                     }
                 },
                 "required": ["message_id"]
@@ -110,16 +112,16 @@ async def list_tools() -> list[Tool]:
 
 @app.call_tool()
 async def call_tool(name: str, arguments: dict) -> list[TextContent]:
-    """处理工具调用"""
+    """Handle tool calls"""
 
     if name == "get_email_path":
-        # 工具 1: 获取单个邮件路径
+        # Tool 1: Get single email path
         message_id = arguments.get("message_id")
 
         if not message_id:
             return [TextContent(
                 type="text",
-                text="错误: 缺少 message_id 参数"
+                text="Error: Missing message_id parameter"
             )]
 
         try:
@@ -139,11 +141,11 @@ async def call_tool(name: str, arguments: dict) -> list[TextContent]:
                 result = {
                     "success": False,
                     "message_id": message_id,
-                    "error": "未找到对应的邮件文件",
+                    "error": "Email file not found",
                     "possible_reasons": [
-                        "Message-ID 不存在",
-                        "邮件文件已被删除",
-                        "邮件在其他版本的 Mail 数据库中"
+                        "Message-ID does not exist",
+                        "Email file has been deleted",
+                        "Email is in a different Mail database version"
                     ]
                 }
                 return [TextContent(
@@ -163,13 +165,13 @@ async def call_tool(name: str, arguments: dict) -> list[TextContent]:
             )]
 
     elif name == "get_thread_paths":
-        # 工具 2: 获取邮件线索的所有路径
+        # Tool 2: Get all paths in thread
         message_id = arguments.get("message_id")
 
         if not message_id:
             return [TextContent(
                 type="text",
-                text="错误: 缺少 message_id 参数"
+                text="Error: Missing message_id parameter"
             )]
 
         try:
@@ -190,7 +192,7 @@ async def call_tool(name: str, arguments: dict) -> list[TextContent]:
                 result = {
                     "success": False,
                     "message_id": message_id,
-                    "error": "未找到邮件线索或线索中没有邮件文件"
+                    "error": "Email thread not found or thread has no email files"
                 }
                 return [TextContent(
                     type="text",
@@ -209,31 +211,31 @@ async def call_tool(name: str, arguments: dict) -> list[TextContent]:
             )]
 
     elif name == "read_email":
-        # 工具 3: 解析并读取邮件内容
+        # Tool 3: Parse and read email content
         message_id = arguments.get("message_id")
 
         if not message_id:
             return [TextContent(
                 type="text",
-                text="错误: 缺少 message_id 参数"
+                text="Error: Missing message_id parameter"
             )]
 
         try:
-            # 先获取文件路径
+            # First get file path
             file_path = get_single_email_path(message_id)
 
             if not file_path:
                 result = {
                     "success": False,
                     "message_id": message_id,
-                    "error": "未找到对应的邮件文件"
+                    "error": "Email file not found"
                 }
                 return [TextContent(
                     type="text",
                     text=json.dumps(result, ensure_ascii=False, indent=2)
                 )]
 
-            # 解析邮件文件
+            # Parse email file
             email_data = parse_email_file(file_path)
 
             return [TextContent(
@@ -253,31 +255,31 @@ async def call_tool(name: str, arguments: dict) -> list[TextContent]:
             )]
 
     elif name == "read_thread":
-        # 工具 4: 解析并读取整个邮件线索
+        # Tool 4: Parse and read entire email thread
         message_id = arguments.get("message_id")
 
         if not message_id:
             return [TextContent(
                 type="text",
-                text="错误: 缺少 message_id 参数"
+                text="Error: Missing message_id parameter"
             )]
 
         try:
-            # 获取线索中所有邮件的路径
+            # Get all email paths in thread
             paths = get_all_thread_paths(message_id, include_not_found=False)
 
             if not paths:
                 result = {
                     "success": False,
                     "message_id": message_id,
-                    "error": "未找到邮件线索或线索中没有邮件文件"
+                    "error": "Email thread not found or thread has no email files"
                 }
                 return [TextContent(
                     type="text",
                     text=json.dumps(result, ensure_ascii=False, indent=2)
                 )]
 
-            # 解析所有邮件
+            # Parse all emails
             emails = []
             for path in paths:
                 email_data = parse_email_file(path)
@@ -308,12 +310,12 @@ async def call_tool(name: str, arguments: dict) -> list[TextContent]:
     else:
         return [TextContent(
             type="text",
-            text=f"错误: 未知工具 '{name}'"
+            text=f"Error: Unknown tool '{name}'"
         )]
 
 
 async def main():
-    """启动 MCP 服务器"""
+    """Start MCP server"""
     async with stdio_server() as (read_stream, write_stream):
         await app.run(
             read_stream,

@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
-解析 .emlx 邮件文件，提取纯文本内容
+Parse .emlx email files and extract plain text content
 
-专注于纯文本邮件解析，返回结构化数据供 AI 分析
+Focus on plain text email parsing, return structured data for AI analysis
 """
 
 import email
@@ -16,13 +16,13 @@ import quopri
 
 def decode_header_value(value: str) -> str:
     """
-    解码邮件头的编码值（如 =?utf-8?B?...?=）
+    Decode encoded email header values (e.g. =?utf-8?B?...?=)
 
     Args:
-        value: 编码的头值
+        value: Encoded header value
 
     Returns:
-        解码后的字符串
+        Decoded string
     """
     if not value:
         return ""
@@ -45,13 +45,13 @@ def decode_header_value(value: str) -> str:
 
 def parse_email_file(file_path: str) -> Dict[str, Any]:
     """
-    解析 .emlx 文件，提取纯文本内容
+    Parse .emlx file and extract plain text content
 
     Args:
-        file_path: .emlx 文件的绝对路径
+        file_path: Absolute path to .emlx file
 
     Returns:
-        包含邮件信息的字典：
+        Dictionary containing email information:
         {
             "success": True/False,
             "message_id": "...",
@@ -59,7 +59,7 @@ def parse_email_file(file_path: str) -> Dict[str, Any]:
             "from": "...",
             "to": "...",
             "date": "...",
-            "body_text": "邮件正文",
+            "body_text": "email body",
             "headers": {...},
             "file_path": "..."
         }
@@ -69,78 +69,78 @@ def parse_email_file(file_path: str) -> Dict[str, Any]:
     if not file_path_obj.exists():
         return {
             "success": False,
-            "error": f"文件不存在: {file_path}"
+            "error": f"File not found: {file_path}"
         }
 
     try:
-        # 读取邮件内容
+        # Read email content
         with open(file_path_obj, 'rb') as f:
             lines = f.readlines()
 
-        # .emlx 文件格式：
-        # 第一行：文件大小
-        # 第二行开始：邮件原始内容
-        # 最后几行：Apple plist 元数据（XML）
+        # .emlx file format:
+        # First line: file size
+        # Second line onwards: raw email content
+        # Last few lines: Apple plist metadata (XML)
 
-        # 跳过第一行（大小信息）
+        # Skip first line (size info)
         if len(lines) < 2:
             return {
                 "success": False,
-                "error": "文件格式无效或为空",
+                "error": "Invalid file format or empty file",
                 "file_path": str(file_path)
             }
 
-        # 从第二行开始，找到 plist 开始的位置
+        # From second line, find plist start position
         email_lines = []
-        for line in lines[1:]:  # 跳过第一行
+        for line in lines[1:]:  # Skip first line
             line_str = line.decode('utf-8', errors='ignore')
-            # 检测 plist 开始标记
+            # Detect plist start marker
             if '<?xml version' in line_str or '<!DOCTYPE plist' in line_str or '<plist version' in line_str:
                 break
             email_lines.append(line)
 
         raw_content = b''.join(email_lines)
 
-        # 解析邮件 - 使用 compat32 处理旧格式，default 处理新格式
+        # Parse email - use compat32 for old format, default for new format
         msg = email.message_from_bytes(raw_content, policy=email.policy.compat32)
 
-        # 提取基本头信息
+        # Extract basic header info
         message_id = msg.get('Message-Id', '')
         subject = decode_header_value(msg.get('Subject', ''))
         from_addr = decode_header_value(msg.get('From', ''))
         to_addr = decode_header_value(msg.get('To', ''))
         date = msg.get('Date', '')
 
-        # 提取所有头信息
+        # Extract all headers
         headers = dict(msg.items())
 
-        # 提取正文
+        # Extract body
         body_text = ""
 
         if msg.is_multipart():
-            # multipart 邮件 - 查找 text/plain 部分
+            # multipart email - find text/plain part
             for part in msg.walk():
                 content_type = part.get_content_type()
                 content_disposition = str(part.get('Content-Disposition', ''))
 
-                # 跳过附件
+                # Skip attachments
                 if 'attachment' in content_disposition:
                     continue
 
                 if content_type == 'text/plain':
-                    # 找到纯文本部分
+                    # Found plain text part
                     payload = part.get_payload(decode=True)
                     if payload:
-                        # 尝试解码
+                        # Try to decode
                         charset = part.get_content_charset() or 'utf-8'
                         try:
                             body_text = payload.decode(charset)
                         except (UnicodeDecodeError, LookupError):
-                            # 回退到 utf-8
+                            # Fallback to utf-8
                             body_text = payload.decode('utf-8', errors='replace')
                     break
         else:
-            # 单部分邮件 - 直接提取
+            # Single part email - extract directly
             content_type = msg.get_content_type()
             if content_type == 'text/plain':
                 payload = msg.get_payload(decode=True)
@@ -151,7 +151,7 @@ def parse_email_file(file_path: str) -> Dict[str, Any]:
                     except (UnicodeDecodeError, LookupError):
                         body_text = payload.decode('utf-8', errors='replace')
             else:
-                # 非 text/plain，尝试直接获取 payload
+                # Non text/plain, try to get payload directly
                 body_text = str(msg.get_payload())
 
         return {
@@ -169,36 +169,36 @@ def parse_email_file(file_path: str) -> Dict[str, Any]:
     except Exception as e:
         return {
             "success": False,
-            "error": f"解析失败: {str(e)}",
+            "error": f"Parse failed: {str(e)}",
             "file_path": str(file_path)
         }
 
 
 def main():
-    """命令行测试工具"""
+    """Command line test tool"""
     import sys
 
     if len(sys.argv) < 2:
-        print("用法: python3 parse_email.py <emlx文件路径>")
-        print("\n示例:")
+        print("Usage: python3 parse_email.py <emlx_file_path>")
+        print("\nExample:")
         print("  python3 parse_email.py ~/Library/Mail/V10/.../135189.emlx")
         sys.exit(1)
 
     file_path = sys.argv[1]
 
-    print(f"解析邮件文件: {file_path}\n")
+    print(f"Parsing email file: {file_path}\n")
 
     result = parse_email_file(file_path)
 
     if result['success']:
-        print("✅ 解析成功\n")
-        print(f"主题: {result['subject']}")
-        print(f"发件人: {result['from']}")
-        print(f"收件人: {result['to']}")
-        print(f"日期: {result['date']}")
+        print("✅ Parse successful\n")
+        print(f"Subject: {result['subject']}")
+        print(f"From: {result['from']}")
+        print(f"To: {result['to']}")
+        print(f"Date: {result['date']}")
         print(f"Message-ID: {result['message_id']}")
         print("\n" + "="*50)
-        print("\n正文内容:")
+        print("\nBody content:")
         print(result['body_text'])
     else:
         print(f"❌ {result['error']}")
