@@ -1,7 +1,7 @@
 #!/bin/bash
 # Mail Message-ID Copy Quick Action
 # Copy the first Message-ID from selected emails in Mail.app
-# Optimized: Only processes first 5000 chars for performance
+# Optimized: Processes first 10000 chars to handle longer email headers
 
 osascript <<'EOF'
 tell application "Mail"
@@ -20,13 +20,13 @@ tell application "Mail"
             -- Get email source
             set msgSource to source of msg
 
-            -- Only take first 5000 characters (email headers won't exceed this)
-            -- Performance optimization: Large attachment emails (3.6MB) process in <1 second
+            -- Only take first 10000 characters (email headers can be longer)
+            -- Performance optimization: Still processes large attachment emails quickly
             set msgHeader to ""
             try
                 set sourceLen to length of msgSource
-                if sourceLen > 5000 then
-                    set msgHeader to text 1 thru 5000 of msgSource
+                if sourceLen > 10000 then
+                    set msgHeader to text 1 thru 10000 of msgSource
                 else
                     set msgHeader to msgSource
                 end if
@@ -36,7 +36,7 @@ tell application "Mail"
 
             -- Extract Message-ID (case-insensitive)
             -- Supports both "Message-ID" and "Message-Id" formats
-            set msgID to do shell script "echo " & quoted form of msgHeader & " | awk '/^[Mm]essage-[Ii][dD]:/ {gsub(/^[Mm]essage-[Ii][dD]: */, \"\"); print; exit}' | tr -d '\\r\\n' | xargs"
+            set msgID to do shell script "echo " & quoted form of msgHeader & " | grep -iE 'Message-Id:[^<]*<[^>]+>' | sed -E 's/.*[Mm]essage-[Ii][dD]:[^<]*(<[^>]+>).*/\\1/' | head -1 | tr -d '\\r\\n'"
 
             if msgID is not "" then
                 -- Found first valid Message-ID, copy and exit
