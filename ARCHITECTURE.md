@@ -323,9 +323,11 @@ Mail groups related emails using `conversation_id`:
 3. Extract email content until plist XML marker
 4. Parse RFC 5322 format using `email` module
 5. Decode headers using `email.header.decode_header()`
-6. Extract `text/plain` body parts
-7. Decode body using charset from `Content-Type`
-8. Return structured JSON
+6. Extract key headers: Subject, From, To, Cc, Date
+7. Extract threading headers: References, In-Reply-To
+8. Extract `text/plain` body parts
+9. Decode body using charset from `Content-Type`
+10. Return structured JSON (no raw headers, no file path)
 
 **Supported Formats**:
 
@@ -407,7 +409,8 @@ Mail groups related emails using `conversation_id`:
 │ ┌──────────────────────────────────────────────────────┐   │
 │ │ parse_email.py                                       │   │
 │ │   → Read .emlx file                                  │   │
-│ │   → Extract Subject, From, To, Date                  │   │
+│ │   → Extract Subject, From, To, Cc, Date              │   │
+│ │   → Extract threading headers (References, In-Reply-To)│   │
 │ │   → Decode body text                                 │   │
 │ │   → Return JSON structure                            │   │
 │ └──────────────────────────────────────────────────────┘   │

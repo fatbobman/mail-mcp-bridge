@@ -182,18 +182,11 @@ Parse and read plain text content of a single email.
   "subject": "Project Update",
   "from": "Sender Name <sender@example.com>",
   "to": "Recipient Name <recipient@example.com>",
+  "cc": "cc@example.com",
   "date": "Wed, 25 Dec 2024 10:30:00 +0800",
-  "body_text": "Plain text email body...",
-  "headers": {
-    "Message-Id": "<abc@example.com>",
-    "Subject": "Project Update",
-    "From": "Sender Name <sender@example.com>",
-    "To": "Recipient Name <recipient@example.com>",
-    "Date": "Wed, 25 Dec 2024 10:30:00 +0800",
-    "Cc": "cc@example.com",
-    "X-Mailer": "Apple Mail (..."
-  },
-  "file_path": "/path/to/email.emlx"
+  "references": "<original@example.com> <prev@example.com>",
+  "in_reply_to": "<prev@example.com>",
+  "body_text": "Plain text email body..."
 }
 ```
 
@@ -202,8 +195,7 @@ Parse and read plain text content of a single email.
 ```json
 {
   "success": false,
-  "error": "Parse failed: ...",
-  "file_path": "/path/to/email.emlx"
+  "error": "Parse failed: ..."
 }
 ```
 
@@ -219,12 +211,14 @@ Parse and read plain text content of a single email.
 **What gets extracted**:
 
 - ✅ Plain text body (`text/plain` parts only)
-- ✅ Headers (Subject, From, To, Date, Cc, etc.)
+- ✅ Key headers (Subject, From, To, Cc, Date)
+- ✅ Threading headers (References, In-Reply-To)
 - ✅ Decoded header values (e.g. `=?UTF-8?B?...?=`)
 - ❌ Attachments (skipped)
 - ❌ HTML content (skipped)
 - ❌ Embedded images (skipped)
 - ❌ Rich text/RTF (skipped)
+- ❌ Full raw headers (not included)
 
 **Email Parsing Process**:
 
@@ -280,10 +274,11 @@ Parse and read entire email thread.
       "subject": "Re: Project Update",
       "from": "Alice <alice@example.com>",
       "to": "Bob <bob@example.com>",
+      "cc": "",
       "date": "Mon, 23 Dec 2024 09:00:00 +0800",
-      "body_text": "Hi Bob, how's the project going?",
-      "headers": {...},
-      "file_path": "/path/to/msg1.emlx"
+      "references": "<original@example.com>",
+      "in_reply_to": "",
+      "body_text": "Hi Bob, how's the project going?"
     },
     {
       "success": true,
@@ -291,10 +286,11 @@ Parse and read entire email thread.
       "subject": "Re: Project Update",
       "from": "Bob <bob@example.com>",
       "to": "Alice <alice@example.com>",
+      "cc": "",
       "date": "Tue, 24 Dec 2024 10:30:00 +0800",
-      "body_text": "Making good progress...",
-      "headers": {...},
-      "file_path": "/path/to/msg2.emlx"
+      "references": "<original@example.com> <msg1@example.com>",
+      "in_reply_to": "<msg1@example.com>",
+      "body_text": "Making good progress..."
     },
     {
       "success": true,
@@ -302,10 +298,11 @@ Parse and read entire email thread.
       "subject": "Re: Project Update",
       "from": "Alice <alice@example.com>",
       "to": "Bob <bob@example.com>",
+      "cc": "",
       "date": "Wed, 25 Dec 2024 15:45:00 +0800",
-      "body_text": "Great to hear!",
-      "headers": {...},
-      "file_path": "/path/to/msg3.emlx"
+      "references": "<original@example.com> <msg1@example.com> <msg2@example.com>",
+      "in_reply_to": "<msg2@example.com>",
+      "body_text": "Great to hear!"
     }
   ]
 }
@@ -360,7 +357,6 @@ All tools follow this error response format:
 Additional fields may be included depending on the error:
 
 - `message_id` - When Message-ID is provided
-- `file_path` - When file operation fails
 - `possible_reasons` - Array of likely causes (for `get_email_path`)
 
 ### Common Errors

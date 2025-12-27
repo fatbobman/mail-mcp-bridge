@@ -7,7 +7,7 @@
 
 **Demo: See it in action** (Click to watch)
 
-[![Demo Video](https://github.com/user-attachments/assets/bd06230b-16ad-476d-8b73-4495071b2b6c)]
+![Demo Video](https://github.com/user-attachments/assets/b9229493-8bdf-4995-9ca8-d5de55ec7144)
 
 *Shows: Copy Message-ID from Mail → AI analyzes email content*
 
