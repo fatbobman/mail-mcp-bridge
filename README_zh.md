@@ -1,54 +1,46 @@
 # Mail MCP Bridge
 
-> 让 AI 直接访问你的 macOS Mail 邮件
+> 通过模型上下文协议(MCP)连接 macOS Mail 和 AI
 
-**Mail MCP Bridge** 是一个连接 macOS Mail 和 AI 助手（如 Claude、ChatGPT）的桥梁。只需在 Mail 中复制 Message-ID 并粘贴给 AI，无需手动导出邮件，AI 就能直接读取和分析邮件内容。
+**Mail MCP Bridge** 让 AI 助手（如 Claude、ChatGPT）能够直接访问和分析你的 macOS Mail 邮件。只需在 Mail 中复制 Message-ID 并粘贴给 AI——无需手动导出邮件。
 
 [English](README.md)
 
-## 🎯 主要用途
+## 🎯 项目简介
 
-**核心价值：让 AI 帮你分析纯文本邮件，跟踪项目进展**
+**问题**: 现实中的大量沟通通过邮件进行——项目协作、客户沟通、商务谈判、技术支持。手动导出邮件让 AI 分析非常繁琐低效。
 
-本项目专注于提取和分析邮件的**纯文本内容**，非常适合以下场景：
+**解决方案**: Mail MCP Bridge 通过简单的工作流让 AI 直接读取邮件:
 
-- **📋 项目进展跟踪** - 让 AI 分析赞助商、客户、合作伙伴的邮件往来
-- **💼 商务沟通分析** - 提取关键信息、行动项、时间节点
-- **🔍 邮件内容总结** - 快速了解长邮件或邮件线索的核心内容
-- **📊 数据提取** - 从邮件中提取结构化信息（如需求、反馈、承诺）
-- **🤝 对话历史回顾** - 完整查看邮件线索，理解沟通背景
+- 在 Mail 中复制 Message-ID (一个键盘快捷键)
+- 粘贴给 AI
+- AI 瞬间分析邮件内容
 
-**注意：** 本项目专注于文本内容提取，不处理附件、图片或 HTML 格式化内容。对于 AI 分析来说，纯文本是最有效的输入方式。
+**使用场景**:
 
-## 💡 为什么创建这个项目
+- 📋 通过邮件线程跟踪项目进展
+- 💼 从商务沟通中提取关键信息
+- 🔍 总结长邮件对话
+- 📊 提取结构化数据（需求、反馈、承诺）
+- 🤝 回顾对话历史
 
-我最近正在探索将 AI 深度融入工作与生活的各个方面。在实践中，我发现让 AI 协助进行项目管理和沟通汇总是一个特别有价值的场景。
-
-然而，现实中的很多沟通都通过邮件进行——从项目协作、客户沟通到商务谈判、技术支持等各种场景。在 macOS 上，这些邮件（尤其是邮件线索）对应的数据文件分散存储在不同的目录中。传统的做法是分别导出每封邮件才能让 AI 跟踪、分析，这对于仍在进行中的项目来说非常不友好且效率低下。
-
-为了解决这个问题，我创建了 **Mail MCP Bridge**：
-- 一键获取邮件的 Message-ID（通过 Mail Quick Action）
-- 提供基于 Message-ID 的 MCP 工具，快速提取结构化的纯文本邮件内容
-- 让 AI 能够无缝跟踪项目进展、分析沟通历史、提取关键信息
-
-简单来说，这个项目填补了 macOS Mail 和 AI 助手之间的空白，让邮件成为 AI 工作流中的第一公民。
+**专注**: 只提取纯文本内容（无附件、无 HTML）——完美适配 AI 分析。
 
 ## ✨ 特性
 
-- **📧 直接邮件访问** - AI 通过 MCP 协议直接读取你的邮件
-- **🧵 线索支持** - 一个 Message-ID 获取完整的邮件对话
-- **🔍 快速高效** - 毫秒级查询速度
-- **🎯 纯文本输出** - 干净的文本提取，专为 AI 分析优化
-- **⚡ 易于使用** - Mail 应用中的 Quick Action 一键复制 Message-ID
-- **🔒 隐私优先** - 本地运行，邮件永不离开你的 Mac
+- 📧 **直接访问** - AI 通过 MCP 协议读取邮件
+- 🧵 **线索支持** - 一个 Message-ID 获取完整对话
+- ⚡ **极速** - 毫秒级查询响应
+- 🎯 **纯文本** - 干净的文本提取，为 AI 优化
+- 🔒 **隐私优先** - 本地运行，邮件永不离开你的 Mac
 
 ## 🚀 快速开始
 
 ### 前置要求
 
-- macOS 12.0+（带 Mail 应用）
+- macOS 12.0+ (带 Mail 应用)
 - Python 3.9+
-- MCP 兼容的 AI 助手（如 Claude Desktop）
+- MCP 兼容的 AI 助手 (如 Claude Desktop)
 
 ### 安装
 
@@ -61,203 +53,128 @@ cd mail-mcp-bridge
 pip3 install mcp
 ```
 
-#### 为 Claude Desktop 配置 MCP 服务器
+### 配置 Claude Desktop
 
-1. **找到 Claude Desktop 配置文件位置：**
-   - macOS: `~/Library/Application Support/Claude/claude_desktop_config.json`
+1. **找到配置文件位置**:
 
-2. **编辑配置文件**（如果不存在则创建）：
+   ```bash
+   ~/Library/Application Support/Claude/claude_desktop_config.json
+   ```
 
-```json
-{
-  "mcpServers": {
-    "mail": {
-      "command": "python3",
-      "args": [
-        "/path/to/mail-mcp-bridge/mail_mcp_server.py"
-      ]
-    }
-  }
-}
-```
+2. **编辑配置** (如果不存在则创建):
 
-**重要：** 将 `/path/to/mail-mcp-bridge` 替换为你的实际项目路径。
+   ```json
+   {
+     "mcpServers": {
+       "mail": {
+         "command": "python3",
+         "args": [
+           "/path/to/mail-mcp-bridge/mail_mcp_server.py"
+         ]
+       }
+     }
+   }
+   ```
 
-3. **重启 Claude Desktop**（完全退出后重新打开）
+   **重要**: 将 `/path/to/mail-mcp-bridge` 替换为实际的项目路径。
 
-> **注意：** 本项目已在 macOS 26 (Tahoe) 上测试。理论上支持 macOS 12.0+，但其他版本未经测试。
+3. **重启 Claude Desktop** (完全退出后重新打开)
 
 ### 设置 Mail Quick Action
 
-按照以下步骤为 Mail 添加"复制 Message-ID"功能：
+在 Mail 应用中添加"复制 Message-ID"按钮:
 
-1. **打开 Automator**
-   - 按 `⌘ + Space` 并输入"Automator"
-   - 或在 `/Applications/Automator.app` 中找到
+**视频演示** (30秒设置):
 
-2. **创建新的 Quick Action**
-   - File → New（或 `⌘ + N`）
-   - 选择"Quick Action"（旧版 macOS 可能显示为"Service"）
-   - 点击"Choose"
+[![观看演示视频](https://github.com/user-attachments/assets/7ede277f-41ef-4898-ad8b-3014d5854b19)](https://github.com/user-attachments/assets/7ede277f-41ef-4898-ad8b-3014d5854b19)
 
-3. **配置 Quick Action**
-   - Workflow receives current: **email messages**
+**详细步骤**:
+
+1. 打开 **Automator** (`⌘ + 空格`，输入 "Automator")
+
+2. 创建新的 **Quick Action**:
+   - File → New (`⌘ + N`)
+   - 选择 "Quick Action"
+   - Workflow receives current: **no input**
    - in: **Mail.app**
-   - 勾选："Output replaces selected text"
 
-4. **添加 Shell Script Action**
-   - 在左侧面板搜索"Run Shell Script"
+3. 添加 **Run Shell Script** 动作:
+   - 在左侧面板搜索 "Run Shell Script"
    - 拖拽到工作流区域
-   - Shell: `/bin/bash`
-   - Pass input: **as arguments**
+   - Shell: `/bin/bash**
 
-5. **复制脚本内容**
+4. 复制脚本内容:
+
    ```bash
    cat automator_script.sh
    ```
-   - 复制全部输出
-   - 粘贴到 Automator 的脚本区域
 
-6. **保存 Quick Action**
-   - File → Save（或 `⌘ + S`）
-   - 名称：**Copy Message-ID**
-   - 会保存到 `~/Library/Services/`
+   将完整输出粘贴到 Automator 脚本区域
 
-7. **分配快捷键**（推荐）
+5. 保存为 **"Copy Message-ID"**
+
+6. (可选) 分配键盘快捷键:
    - 系统设置 → 键盘 → 键盘快捷键
-   - 选择：Services → Mail
-   - 找到："Copy Message-ID"
-   - 点击并添加你喜欢的快捷键（例如：`⌘ + ⇧ + C`）
+   - 服务 → Mail → "Copy Message-ID"
+   - 添加快捷键 (如 `⌘ + ⇧ + C`)
 
-**设置预览：**
+**测试**:
 
-![Automator Setup](images/automatic-setup.webp)
-
-**测试一下：**
 1. 打开 Mail 应用
 2. 选择任意邮件
-3. 使用你设置的快捷键（如果已配置）
-4. 会听到提示音，表示 Message-ID 已复制
-5. 检查剪贴板 - Message-ID 应该已在其中，可以粘贴给 AI
-
-> **注意：** macOS 通知可能因系统设置而不显示，但提示音确认操作成功。
-
-**演示视频：**
-
-https://github.com/user-attachments/assets/7ede277f-41ef-4898-ad8b-3014d5854b19
-
-> **注意：** 视频中为了演示清楚，通过右键菜单运行 Quick Action。日常使用时，建议设置键盘快捷键会更方便。
+3. 按下快捷键 (如果已配置)
+4. 应该听到提示音，确认 Message-ID 已复制
 
 ## 📖 使用方法
 
 ### 基本工作流
 
-1. 在 Mail 中**选择邮件**
-2. 使用你设置的快捷键复制 Message-ID
-3. 将 Message-ID **粘贴给 AI**
-
-### 使用示例
-
-**读取单封邮件：**
 ```
-你：请分析这封邮件：<message-id@example.com>
+1. 在 Mail 中选择邮件
+2. 按下快捷键 (如 ⌘⇧C)
+3. 粘贴 Message-ID 给 AI
+```
 
-AI：我来帮你分析这封邮件...
+### 对话示例
+
+**读取单封邮件**:
+
+```
+你: 请分析这封邮件: <message-id@example.com>
+
+AI: 我来读取这封邮件...
 [AI 读取并分析邮件内容]
 ```
 
-**读取邮件线索：**
-```
-你：这个 Message-ID 对应的完整对话是什么？
+**读取邮件线索**:
 
-AI：我来获取整个邮件线索...
+```
+你: <message-id@example.com> 的完整对话是什么?
+
+AI: 我来检索整个线索...
 [AI 显示对话中的所有邮件]
 ```
 
-**典型应用场景：**
+**实际使用场景**:
 
 ```
-你：帮我总结一下与业务合作伙伴的所有邮件沟通，
-包括他们的需求、承诺的时间点和待办事项。
+你: 请总结我们与商业伙伴的所有沟通，
+包括他们的需求、承诺的时间表和行动项。
 
-AI：我会读取相关邮件线索并提取关键信息...
-[AI 分析邮件内容，整理出项目进展、承诺和行动项]
+AI: 我来阅读相关的邮件线索并提取关键信息...
+[AI 分析邮件内容，整理项目进展、承诺和行动项]
 ```
 
 ## 🛠️ MCP 工具
 
-MCP 服务器提供 4 个工具：
+| 工具 | 描述 |
+|------|------|
+| `get_email_path` | 获取单封邮件的文件路径 |
+| `get_thread_paths` | 获取邮件线索中的所有路径 |
+| `read_email` | 读取单封邮件内容 |
+| `read_thread` | 读取整个邮件线索 |
 
-### 1. `get_email_path`
-通过 Message-ID 获取单个邮件的文件路径。
-
-**参数：**
-- `message_id` (string) - RFC Message-ID，如 `<abc@example.com>`
-
-**返回：**
-```json
-{
-  "success": true,
-  "file_path": "/path/to/email.emlx"
-}
-```
-
-### 2. `get_thread_paths`
-获取邮件线索中所有邮件的文件路径。
-
-**参数：**
-- `message_id` (string) - 线索中任意邮件的 Message-ID
-
-**返回：**
-```json
-{
-  "success": true,
-  "thread_size": 3,
-  "file_paths": [
-    "/path/to/email1.emlx",
-    "/path/to/email2.emlx",
-    "/path/to/email3.emlx"
-  ]
-}
-```
-
-### 3. `read_email`
-解析并读取单个邮件的纯文本内容。
-
-**参数：**
-- `message_id` (string) - RFC Message-ID
-
-**返回：**
-```json
-{
-  "success": true,
-  "subject": "邮件主题",
-  "from": "发件人 <sender@example.com>",
-  "to": "收件人 <recipient@example.com>",
-  "date": "日期字符串",
-  "body_text": "纯文本邮件正文",
-  "headers": {...}
-}
-```
-
-### 4. `read_thread`
-解析并读取整个邮件线索。
-
-**参数：**
-- `message_id` (string) - 线索中任意邮件的 Message-ID
-
-**返回：**
-```json
-{
-  "success": true,
-  "thread_size": 3,
-  "emails": [
-    {/* 邮件 1 */},
-    {/* 邮件 2 */},
-    {/* 邮件 3 */}
-  ]
-}
-```
+📖 **[→ 详细 API 文档](TOOLS.md)**
 
 ## 🏗️ 工作原理
 
@@ -276,84 +193,54 @@ MCP 服务器提供 4 个工具：
        │
        ↓ 结构化数据
 ┌─────────────┐
-│ AI Assistant│ 分析邮件内容、提取信息、跟踪进展
+│ AI Assistant│ 分析邮件内容
 └─────────────┘
 ```
 
-### 技术细节
-
-- **Mail 数据库**: `~/Library/Mail/V10/MailData/Envelope Index` (SQLite)
-- **邮件存储**: `~/Library/Mail/V10/{Account}/{Mailbox}.mbox/.../{ROWID}.emlx`
-- **关键发现**: `messages.ROWID` = 文件名（不是 `remote_id`！）
-
-## 📁 项目结构
-
-```
-mail-mcp-bridge/
-├── get_email_path.py       # 获取单个邮件文件路径
-├── get_thread_paths.py      # 获取邮件线索路径
-├── parse_email.py           # 解析 .emlx 为纯文本
-├── mail_mcp_server.py       # MCP 服务器（主程序）
-├── automator_script.sh      # Mail Quick Action 脚本
-├── README.md                # 英文文档
-└── README_zh.md             # 中文文档
-```
-
-## ⚙️ 配置
-
-### MCP 服务器配置
-
-MCP 服务器配置在：
-```
-~/Library/Application Support/Claude/claude_desktop_config.json
-```
-
-配置示例：
-```json
-{
-  "mcpServers": {
-    "mail": {
-      "command": "python3",
-      "args": [
-        "/path/to/mail-mcp-bridge/mail_mcp_server.py"
-      ]
-    }
-  }
-}
-```
-
-**注意：** 将路径更新为你的实际安装目录。
+🔧 **[→ 技术架构](ARCHITECTURE.md)**
 
 ## 🐛 故障排除
 
-### 问题：MCP 服务器未找到
-**解决方案：**
+### MCP 服务器未找到
+
+**解决方案**:
+
 ```bash
 # 验证 claude_desktop_config.json 中的路径
 cat ~/Library/Application\ Support/Claude/claude_desktop_config.json
 
-# 重启 Claude Desktop（完全退出后重新打开）
+# 重启 Claude Desktop (完全退出后重新打开)
 ```
 
-### 问题：未找到邮件
-**可能原因：**
-1. Message-ID 格式不正确（必须包含 `< >`）
-2. 邮件已从 Mail 中删除
-3. 邮件在不同 Mail 账户的数据库中
+### 找不到邮件
 
-### 问题：权限被拒绝
-**解决方案：**
+**可能原因**:
+
+1. Message-ID 格式不正确 (必须包含 `< >`)
+2. 邮件已从 Mail 中删除
+3. 邮件在不同账户的数据库中
+
+### 权限被拒绝
+
+**解决方案**:
+
 ```bash
-# 添加执行权限
+# 使脚本可执行
 chmod +x *.py *.sh
 ```
 
 ## 🔒 隐私与安全
 
-- ✅ **本地处理**：所有操作在本地 Mac 上运行
-- ✅ **无外部服务器**：不发送数据到外部服务器
-- ✅ **无遥测**：无分析或跟踪
-- ✅ **只读**：只读取邮件数据，永不修改
+- ✅ **本地处理**: 所有操作在你的 Mac 上本地运行
+- ✅ **无外部服务器**: 不向外部服务器发送数据
+- ✅ **无遥测**: 无分析或跟踪
+- ✅ **只读**: 只读取邮件数据，从不修改
+
+## 📚 文档
+
+- **[TOOLS.md](TOOLS.md)** - 完整的 MCP 工具 API 参考
+- **[ARCHITECTURE.md](ARCHITECTURE.md)** - 技术架构和数据库结构
+- **[README.md](README.md)** - English Documentation
 
 ## 📝 许可证
 
@@ -365,14 +252,20 @@ MIT License - 详见 [LICENSE](LICENSE) 文件。
 
 ## 🌟 致谢
 
-- 为 MCP (Model Context Protocol) 生态系统构建
+- 为 MCP (模型上下文协议) 生态系统构建
 - 灵感来源于连接邮件和 AI 的需求
-- 在 macOS 26 (Tahoe) 上的 Claude Desktop 中测试
+- 在 macOS 26 (Tahoe) 的 Claude Desktop 上测试
 
 ## 📮 联系方式
 
-- **Issues**: https://github.com/fatbobman/mail-mcp-bridge/issues
+- **问题反馈**: <https://github.com/fatbobman/mail-mcp-bridge/issues>
 - **作者**: Fatbobman
+
+## ☕ 请我喝杯咖啡
+
+如果你觉得这个项目有帮助,欢迎请我喝杯咖啡!
+
+[![Buy Me A Coffee](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://buymeacoffee.com/fatbobman)
 
 ---
 

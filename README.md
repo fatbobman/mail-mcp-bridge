@@ -6,41 +6,33 @@
 
 [🇨🇳 中文版](README_zh.md)
 
-## 🎯 Primary Use Case
+## 🎯 What & Why
 
-**Core Value: Let AI analyze email text content and track project progress**
+**The Problem**: Much of real-world communication happens through email — project collaborations, client communications, business negotiations, technical support. Manually exporting emails for AI analysis is tedious and inefficient.
 
-This project focuses on extracting and analyzing **plain text email content**, making it ideal for:
+**The Solution**: Mail MCP Bridge lets AI directly read your emails through a simple workflow:
 
-- **📋 Project Progress Tracking** - Analyze email threads with sponsors, clients, and partners
-- **💼 Business Communication Analysis** - Extract key information, action items, and timelines
-- **🔍 Email Summarization** - Quickly understand the core content of long emails or threads
-- **📊 Data Extraction** - Extract structured information from emails (requirements, feedback, commitments)
-- **🤝 Conversation History Review** - View complete email threads to understand communication context
+- Copy Message-ID from Mail (one keyboard shortcut)
+- Paste to AI
+- AI analyzes email content instantly
 
-**Note:** This project focuses on text content extraction and does not process attachments, images, or formatted HTML. For AI analysis, plain text is the most effective input format.
+**Use Cases**:
 
-## 💡 Why I Built This
+- 📋 Track project progress via email threads
+- 💼 Extract key information from business communications
+- 🔍 Summarize long email conversations
+- 📊 Extract structured data (requirements, feedback, commitments)
+- 🤝 Review conversation history
 
-I've been exploring ways to deeply integrate AI into various aspects of my work and life. In practice, I've found that AI-assisted project management and communication summarization is particularly valuable.
-
-However, much of real-world communication happens through email—everything from project collaborations and client communications to business negotiations and technical support. On macOS, email files (particularly email threads) are scattered across different directories. The traditional approach of exporting individual emails for AI analysis is inefficient and unfriendly to active projects.
-
-To solve this problem, I created **Mail MCP Bridge**:
-- One-click Message-ID retrieval (via Mail Quick Action)
-- MCP tools based on Message-ID to quickly extract structured plain text email content
-- Enable AI to seamlessly track project progress, analyze communication history, and extract key information
-
-In short, this project bridges the gap between macOS Mail and AI assistants, making email a first-class citizen in the AI workflow.
+**Focus**: Plain text content extraction only (no attachments, no HTML) — perfect for AI analysis.
 
 ## ✨ Features
 
-- **📧 Direct Email Access** - AI can read your emails through MCP protocol
-- **🧵 Thread Support** - Retrieve entire email conversations with one Message-ID
-- **🔍 Fast & Efficient** - Query emails by Message-ID in milliseconds
-- **🎯 Pure Text Output** - Clean text extraction, perfect for AI analysis
-- **⚡ Easy to Use** - Quick Action in Mail app to copy Message-ID
-- **🔒 Privacy First** - Runs locally, emails never leave your Mac
+- 📧 **Direct Access** - AI reads your emails through MCP protocol
+- 🧵 **Thread Support** - Retrieve entire conversations with one Message-ID
+- ⚡ **Fast** - Millisecond-level query response
+- 🎯 **Pure Text** - Clean text extraction, optimized for AI
+- 🔒 **Privacy First** - Runs locally, emails never leave your Mac
 
 ## 🚀 Quick Start
 
@@ -61,104 +53,92 @@ cd mail-mcp-bridge
 pip3 install mcp
 ```
 
-#### Configure MCP Server for Claude Desktop
+### Configure Claude Desktop
 
-1. **Find Claude Desktop config location:**
-   - macOS: `~/Library/Application Support/Claude/claude_desktop_config.json`
+1. **Find config location**:
 
-2. **Edit the config file** (create if it doesn't exist):
+   ```bash
+   ~/Library/Application Support/Claude/claude_desktop_config.json
+   ```
 
-```json
-{
-  "mcpServers": {
-    "mail": {
-      "command": "python3",
-      "args": [
-        "/path/to/mail-mcp-bridge/mail_mcp_server.py"
-      ]
-    }
-  }
-}
-```
+2. **Edit config** (create if doesn't exist):
 
-**Important:** Replace `/path/to/mail-mcp-bridge` with your actual project path.
+   ```json
+   {
+     "mcpServers": {
+       "mail": {
+         "command": "python3",
+         "args": [
+           "/path/to/mail-mcp-bridge/mail_mcp_server.py"
+         ]
+       }
+     }
+   }
+   ```
+
+   **Important**: Replace `/path/to/mail-mcp-bridge` with your actual project path.
 
 3. **Restart Claude Desktop** (quit completely, then reopen)
 
-> **Note:** This project has been tested on macOS 26 (Tahoe). It should work on macOS 12.0+, but other versions have not been tested yet.
-
 ### Setup Mail Quick Action
 
-Follow these steps to add a "Copy Message-ID" action to Mail:
+Add a "Copy Message-ID" button to Mail app:
 
-1. **Open Automator**
-   - Press `⌘ + Space` and type "Automator"
-   - Or find it in `/Applications/Automator.app`
+**Video Demo** (30 seconds setup):
 
-2. **Create New Quick Action**
-   - File → New (or `⌘ + N`)
-   - Select "Quick Action" (or "Service" on older macOS)
-   - Click "Choose"
+[![Watch demo video](https://github.com/user-attachments/assets/7ede277f-41ef-4898-ad8b-3014d5854b19)](https://github.com/user-attachments/assets/7ede277f-41ef-4898-ad8b-3014d5854b19)
 
-3. **Configure Quick Action**
-   - Workflow receives current: **email messages**
+**Step-by-Step**:
+
+1. Open **Automator** (`⌘ + Space`, type "Automator")
+
+2. Create new **Quick Action**:
+   - File → New (`⌘ + N`)
+   - Select "Quick Action"
+   - Workflow receives current: **no input**
    - in: **Mail.app**
-   - Check: "Output replaces selected text"
 
-4. **Add Shell Script Action**
-   - Search for "Run Shell Script" in the left panel
-   - Drag it to the workflow area
-   - Shell: `/bin/bash`
-   - Pass input: **as arguments**
+3. Add **Run Shell Script** action:
+   - Search "Run Shell Script" in left panel
+   - Drag to workflow area
+   - Shell: `/bin/bash**
 
-5. **Copy Script Content**
+4. Copy script content:
+
    ```bash
    cat automator_script.sh
    ```
-   - Copy the entire output
-   - Paste into the script area in Automator
 
-6. **Save the Quick Action**
-   - File → Save (or `⌘ + S`)
-   - Name: **Copy Message-ID**
-   - It will be saved to `~/Library/Services/`
+   Paste entire output into Automator script area
 
-7. **Assign Keyboard Shortcut** (Optional)
+5. Save as **"Copy Message-ID"**
+
+6. (Optional) Assign keyboard shortcut:
    - System Settings → Keyboard → Keyboard Shortcuts
-   - Select: Services → Mail
-   - Find: "Copy Message-ID"
-   - Click and add your preferred shortcut (e.g., `⌘ + ⇧ + C`)
+   - Services → Mail → "Copy Message-ID"
+   - Add shortcut (e.g., `⌘ + ⇧ + C`)
 
-**Setup Preview:**
+**Test It**:
 
-![Automator Setup](images/automatic-setup.webp)
-
-**Test It:**
 1. Open Mail app
 2. Select any email
-3. Use your keyboard shortcut (if configured)
-4. You should hear a sound confirming the Message-ID was copied
-5. Check your clipboard - the Message-ID should be there, ready to paste to AI
-
-> **Note:** macOS notifications may not appear depending on your system settings, but the sound confirms it worked.
-
-**Demo Video:**
-
-https://github.com/user-attachments/assets/7ede277f-41ef-4898-ad8b-3014d5854b19
-
-> **Note:** In the video above, the Quick Action is triggered via right-click menu for demonstration purposes. In daily use, a keyboard shortcut is more convenient.
+3. Press your keyboard shortcut (if configured)
+4. You should hear a sound confirming Message-ID copied
 
 ## 📖 Usage
 
 ### Basic Workflow
 
-1. **Select email** in Mail app
-2. **Press** ⌘⇧C (or right-click → Copy Message-ID)
-3. **Paste** the Message-ID to AI
+```
+1. Select email in Mail
+2. Press your keyboard shortcut (e.g., ⌘⇧C)
+3. Paste Message-ID to AI
+```
 
 ### Example Conversations
 
-**Read Single Email:**
+**Read Single Email**:
+
 ```
 You: Please analyze this email: <message-id@example.com>
 
@@ -166,7 +146,8 @@ AI: I'll read that email for you...
 [AI reads and analyzes the email content]
 ```
 
-**Read Email Thread:**
+**Read Email Thread**:
+
 ```
 You: What's the full conversation for <message-id@example.com>?
 
@@ -174,7 +155,8 @@ AI: I'll retrieve the entire thread...
 [AI shows all emails in the conversation]
 ```
 
-**Real-World Use Case:**
+**Real-World Use Case**:
+
 ```
 You: Please summarize all communication with our business partner,
 including their requirements, promised timelines, and action items.
@@ -185,78 +167,14 @@ AI: I'll read the relevant email threads and extract key information...
 
 ## 🛠️ MCP Tools
 
-The MCP server provides 4 tools:
+| Tool | Description |
+|------|-------------|
+| `get_email_path` | Get single email file path |
+| `get_thread_paths` | Get all paths in email thread |
+| `read_email` | Read single email content |
+| `read_thread` | Read entire email thread |
 
-### 1. `get_email_path`
-Get the file path of a single email by Message-ID.
-
-**Parameters:**
-- `message_id` (string) - RFC Message-ID, e.g., `<abc@example.com>`
-
-**Returns:**
-```json
-{
-  "success": true,
-  "file_path": "/path/to/email.emlx"
-}
-```
-
-### 2. `get_thread_paths`
-Get all email file paths in a conversation thread.
-
-**Parameters:**
-- `message_id` (string) - Any Message-ID from the thread
-
-**Returns:**
-```json
-{
-  "success": true,
-  "thread_size": 3,
-  "file_paths": [
-    "/path/to/email1.emlx",
-    "/path/to/email2.emlx",
-    "/path/to/email3.emlx"
-  ]
-}
-```
-
-### 3. `read_email`
-Parse and read a single email's plain text content.
-
-**Parameters:**
-- `message_id` (string) - RFC Message-ID
-
-**Returns:**
-```json
-{
-  "success": true,
-  "subject": "Email Subject",
-  "from": "Sender <sender@example.com>",
-  "to": "Recipient <recipient@example.com>",
-  "date": "Date string",
-  "body_text": "Plain text email body",
-  "headers": {...}
-}
-```
-
-### 4. `read_thread`
-Parse and read entire email thread.
-
-**Parameters:**
-- `message_id` (string) - Any Message-ID from the thread
-
-**Returns:**
-```json
-{
-  "success": true,
-  "thread_size": 3,
-  "emails": [
-    {/* Email 1 */},
-    {/* Email 2 */},
-    {/* Email 3 */}
-  ]
-}
-```
+📖 **[→ Detailed API Documentation](TOOLS.md)**
 
 ## 🏗️ How It Works
 
@@ -279,54 +197,14 @@ Parse and read entire email thread.
 └─────────────┘
 ```
 
-### Technical Details
-
-- **Mail Database**: `~/Library/Mail/V10/MailData/Envelope Index` (SQLite)
-- **Email Storage**: `~/Library/Mail/V10/{Account}/{Mailbox}.mbox/.../{ROWID}.emlx`
-- **Key Discovery**: `messages.ROWID` = filename (not `remote_id`!)
-
-## 📁 Project Structure
-
-```
-mail-mcp-bridge/
-├── get_email_path.py       # Get single email file path
-├── get_thread_paths.py      # Get email thread paths
-├── parse_email.py           # Parse .emlx to plain text
-├── mail_mcp_server.py       # MCP server (main)
-├── automator_script.sh      # Mail Quick Action script
-├── README.md                # This file
-└── README_zh.md             # Chinese version
-```
-
-## ⚙️ Configuration
-
-### MCP Server Config
-
-The MCP server is configured in:
-```
-~/Library/Application Support/Claude/claude_desktop_config.json
-```
-
-Configuration example:
-```json
-{
-  "mcpServers": {
-    "mail": {
-      "command": "python3",
-      "args": [
-        "/path/to/mail-mcp-bridge/mail_mcp_server.py"
-      ]
-    }
-  }
-}
-```
-
-**Note:** Update the path to match your actual installation directory.
+🔧 **[→ Technical Architecture](ARCHITECTURE.md)**
 
 ## 🐛 Troubleshooting
 
-### Issue: MCP server not found
-**Solution:**
+### MCP server not found
+
+**Solution**:
+
 ```bash
 # Verify the path in claude_desktop_config.json
 cat ~/Library/Application\ Support/Claude/claude_desktop_config.json
@@ -334,14 +212,18 @@ cat ~/Library/Application\ Support/Claude/claude_desktop_config.json
 # Restart Claude Desktop (quit completely, then reopen)
 ```
 
-### Issue: Email not found
-**Possible causes:**
+### Email not found
+
+**Possible causes**:
+
 1. Message-ID format incorrect (must include `< >`)
 2. Email deleted from Mail
 3. Email in different Mail account database
 
-### Issue: Permission denied
-**Solution:**
+### Permission denied
+
+**Solution**:
+
 ```bash
 # Make scripts executable
 chmod +x *.py *.sh
@@ -354,13 +236,19 @@ chmod +x *.py *.sh
 - ✅ **No Telemetry**: No analytics or tracking
 - ✅ **Read-Only**: Only reads email data, never modifies
 
+## 📚 Documentation
+
+- **[TOOLS.md](TOOLS.md)** - Complete API reference for all MCP tools
+- **[ARCHITECTURE.md](ARCHITECTURE.md)** - Technical architecture and database structure
+- **[README_zh.md](README_zh.md)** - 中文文档
+
 ## 📝 License
 
 MIT License - see [LICENSE](LICENSE) file for details.
 
 ## 🤝 Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+Contributions welcome! Please feel free to submit a Pull Request.
 
 ## 🌟 Acknowledgments
 
@@ -370,8 +258,14 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## 📮 Contact
 
-- **Issues**: https://github.com/fatbobman/mail-mcp-bridge/issues
+- **Issues**: <https://github.com/fatbobman/mail-mcp-bridge/issues>
 - **Author**: Fatbobman (Xu Yang)
+
+## ☕ Buy Me a Coffee
+
+If you find this project helpful, consider buying me a coffee!
+
+[![Buy Me A Coffee](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://buymeacoffee.com/fatbobman)
 
 ---
 
