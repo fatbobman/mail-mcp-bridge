@@ -331,29 +331,33 @@ AI: 我来检索整个线索...
 #### 分析邮件线索（自动触发 Skill）
 
 ```bash
-你: 帮我看看这个邮件线索: <E42FF77C-C563-466D-8544-3E0C16EA24EC@taler.net>
+你: 帮我看看这个邮件线索: <example-thread@example.com>
 
 AI: 我来分析这个邮件线索...
 
 📧 邮件线索分析
-- 邮件数量: 37封
-- 时间跨度: 2025-07-02 至 2025-12-10
-- 参与者: Marc Stibane (GNU Taler) ↔ 你
+- 邮件数量: 15封
+- 时间跨度: 2025-01-10 至 2025-01-15
+- 参与者: 项目组成员 (3人)
 
-💼 商业合作
-- 项目: SwiftUI Layout 自适应问题咨询
-- 费用: 150€
-- 许可证: MIT
+💬 主要议题
+- 讨论项目需求和技术方案
+- 确定开发时间表
+- 分配任务责任
 
 📋 附件清单
-- AdaptiveAmountRow.swift (核心解决方案)
-- TruncationDetectingText.swift (检测组件)
-- Invoice - SwiftUI Consultation.pdf (咨询发票)
-- 多张截图和演示视频
+- requirements.pdf (需求文档)
+- design_mockup.fig (设计稿)
+- 多张技术方案截图
+
+✅ 达成共识
+- 采用 SwiftUI 重构 UI
+- 使用 SwiftData 进行数据管理
+- 预计 2 月中旬完成 MVP
 
 ⚠️ 待处理问题
-- 特定设备上的布局闪烁问题
-- 需要进一步调试和优化
+- 性能优化方案需要进一步讨论
+- 需要安排下周技术评审会议
 ```
 
 #### 实际使用场景
@@ -384,44 +388,45 @@ AI: [提取附件到临时目录]
 #### 使用 Attachment Analyzer Skill
 
 ```bash
-你: /attachment-analyzer
+你: /analyze-attachments
 
-AI: 请提供要分析的邮件 Message-ID
+AI: Please provide the email Message-ID
 
-你: <E42FF77C-C563-466D-8544-3E0C16EA24EC@taler.net>
+你: <example-email@company.com>
 
 AI: 正在分析邮件及附件...
 
 📧 基本信息
-- 发件人: Marc Stibane <marc@taler.net>
-- 主题: Layout problem - can I hire you for that?
-- 日期: 2025年7月2日
-- 线索: 是 (37封邮件)
+- 发件人: 产品团队 <product@company.com>
+- 主题: Q1 产品需求文档评审
+- 日期: 2025年1月15日
+- 线索: 是 (8封邮件)
 
-📎 附件清单 (共9个文件)
+📎 附件清单 (共5个文件)
 
 🚨 高重要性:
-- Invoice - SwiftUI Consultation.pdf
-  咨询发票，可用于税务抵扣
+- PRD_Q1_2025.pdf
+  产品需求文档，需要评审确认
 
 ⚠️ 中重要性:
-- AdaptiveAmountRow.swift
-  核心解决方案代码
-- TruncationDetectingText.swift.zip
-  文本截断检测组件
+- roadmap.xlsx
+  产品路线图规划
+- design_system.fig
+  设计规范文件
 
 💡 低重要性:
-- Screenshot 2025-12-08 at 10.36.30.png 等13张截图
-  调试截图
+- screenshot_01.png 等2张截图
+  参考效果图
 
 💡 关键发现
-- 这是一个 SwiftUI 布局自适应的技术咨询项目
-- 问题已基本解决，但存在特定设备的闪烁问题
-- 咨询费 150€ 已支付
+- Q1 重点功能: 用户系统重构 + 性能优化
+- 预计 3 月底完成全部功能开发
+- 需要在本周五前完成需求评审
 
 ⚠️ 需要行动
-- 考虑解决 iPhone XS 上的布局闪烁问题
-- 文件已清理
+- [ ] 周五前完成 PRD 评审
+- [ ] 确认技术可行性
+- [ ] 安排开发排期会议
 
 ✅ 分析完成，临时文件已删除
 ```
