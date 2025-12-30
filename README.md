@@ -76,7 +76,7 @@ pip3 install mcp
        "mail": {
          "command": "python3",
          "args": [
-           "/path/to/mail-mcp-bridge/mail_mcp_server.py"
+           "/path/to/mail-mcp-bridge/src/mail_mcp_server.py"
          ]
        }
      }
@@ -93,7 +93,7 @@ pip3 install mcp
        "mail": {
          "command": "python3",
          "args": [
-           "/path/to/mail-mcp-bridge/mail_mcp_server.py"
+           "/path/to/mail-mcp-bridge/src/mail_mcp_server.py"
          ],
          "env": {
            "MAIL_ATTACHMENT_PATH": "/tmp"

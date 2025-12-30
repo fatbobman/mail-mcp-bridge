@@ -8,7 +8,7 @@
   "runtime": {
     "type": "python",
     "command": "python3",
-    "entry": "mail_mcp_server.py"
+    "entry": "src/mail_mcp_server.py"
   },
   "tools": [
     "get_email_path",
