@@ -9,6 +9,11 @@ import os
 from pathlib import Path
 from typing import Dict, List, Any
 
+try:
+    from .attachment_paths import get_message_dir
+except ImportError:
+    from attachment_paths import get_message_dir
+
 
 def get_attachment_base_dir() -> str:
     """
@@ -46,6 +51,12 @@ def cleanup_attachments(message_ids: List[str], base_dir: str = None) -> Dict[st
                 }
             ],
             "not_found": ["..."],
+            "invalid": [
+                {
+                    "message_id": "...",
+                    "error": "..."
+                }
+            ],
             "error": "..." (if failed)
         }
     """
@@ -63,11 +74,17 @@ def cleanup_attachments(message_ids: List[str], base_dir: str = None) -> Dict[st
 
     cleaned = []
     not_found = []
+    invalid = []
 
     for message_id in message_ids:
-        # Clean message_id for use as directory name (remove angle brackets)
-        clean_message_id = message_id.strip('<>')
-        message_dir = base_path / clean_message_id
+        try:
+            message_dir = get_message_dir(base_path, message_id)
+        except ValueError as e:
+            invalid.append({
+                "message_id": message_id,
+                "error": str(e)
+            })
+            continue
 
         if message_dir.exists() and message_dir.is_dir():
             # Calculate size before deletion
@@ -102,7 +119,8 @@ def cleanup_attachments(message_ids: List[str], base_dir: str = None) -> Dict[st
         "success": True,
         "base_dir": base_dir,
         "cleaned": cleaned,
-        "not_found": not_found
+        "not_found": not_found,
+        "invalid": invalid
     }
 
 

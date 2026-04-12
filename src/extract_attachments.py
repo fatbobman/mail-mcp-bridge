@@ -11,7 +11,11 @@ from email.header import decode_header
 from pathlib import Path
 from typing import Dict, List, Any, Optional
 import os
-import shutil
+
+try:
+    from .attachment_paths import get_message_dir
+except ImportError:
+    from attachment_paths import get_message_dir
 
 
 def decode_header_value(value: str) -> str:
@@ -129,9 +133,7 @@ def extract_attachments(
 
         # Create output directory structure
         base_dir = output_dir or get_attachment_base_dir()
-        # Clean message_id for use as directory name (remove angle brackets)
-        clean_message_id = message_id.strip('<>')
-        message_dir = Path(base_dir) / clean_message_id
+        message_dir = get_message_dir(base_dir, message_id)
         message_dir.mkdir(parents=True, exist_ok=True)
 
         # Track extraction results
